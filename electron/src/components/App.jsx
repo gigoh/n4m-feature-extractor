@@ -65,13 +65,14 @@ function App() {
         }}
       >
         <div style={containerStyle}>
+          <div>Select Camera</div>
           <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-            {videos.map(video => (
+            {videos.map((video, index) => (
               <FormControlLabel
                 key={video.deviceId}
                 value={video.deviceId}
                 control={<Radio onChange={() => setDid(video.deviceId)} />}
-                label={video.deviceId}
+                label={index}
               />
             ))}
           </RadioGroup>
