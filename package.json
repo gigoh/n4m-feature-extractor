@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "cd ./electron; npm install"
+    "postinstall": "cd ./electron && npm install"
   },
   "keywords": [],
   "author": "Yuichi Yogo",
