@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Status from "./Status";
 import Selector from "./Selector";
 import Labels from "./Labels";
@@ -25,16 +28,26 @@ function App() {
   const [labelCount, setLabelCount] = useState(2);
   const [targetLabel, setTargetLabel] = useState(null);
   const [classifier, setClassifier] = useState(null);
+  const [videos, setVideos] = useState([]);
+  const [did, setDid] = useState();
+
+  useEffect(() => {
+    navigator.mediaDevices.enumerateDevices().then(values => {
+      setVideos(values.filter(x => x.kind === "videoinput"));
+    });
+  }, []);
 
   useEffect(() => {
     const setVideo = async () => {
       videoEl.current.srcObject = await navigator.mediaDevices.getUserMedia({
-        video: true
+        video: {
+          deviceId: did
+        }
       });
       setClassifier(buildFeatureExtractor(videoEl.current));
     };
     setVideo();
-  }, []);
+  }, [did]);
 
   return (
     <StatusContext.Provider
@@ -52,6 +65,16 @@ function App() {
         }}
       >
         <div style={containerStyle}>
+          <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
+            {videos.map(video => (
+              <FormControlLabel
+                key={video.deviceId}
+                value={video.deviceId}
+                control={<Radio onChange={() => setDid(video.deviceId)} />}
+                label={video.deviceId}
+              />
+            ))}
+          </RadioGroup>
           <video ref={videoEl} width="480px" height="360px" autoPlay />
           <div style={mainStyle}>
             <Status />
